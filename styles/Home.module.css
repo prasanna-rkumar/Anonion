@@ -1,5 +1,7 @@
 .container {
   min-height: 100vh;
+  max-width: 1280px;
+  margin: auto;
   padding: 0 0.5rem;
   display: flex;
   flex-direction: column;
@@ -35,10 +37,10 @@
   align-items: center;
 }
 
-.title a {
+/* .title span {
   color: #0070f3;
   text-decoration: none;
-}
+} */
 
 .title a:hover,
 .title a:focus,

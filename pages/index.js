@@ -1,9 +1,19 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import styles from '../styles/Home.module.css'
+import Header from '../components/Header'
+import {
+  useAuthUser,
+  withAuthUser
+} from 'next-firebase-auth'
+function Home() {
+  var AuthUser = useAuthUser()
+  let isAuthed = (AuthUser && AuthUser.email)
+  var actionButtonHref = isAuthed ? "/anonions?new_entry=true" : "/login"
 
-export default function Home() {
   return (
     <div className={styles.container}>
+      <Header email={AuthUser.email} signOut={AuthUser.signOut} />
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
@@ -11,48 +21,24 @@ export default function Home() {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
+          Welcome {isAuthed ? "back" : ""} to&nbsp;
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500 to-teal-500 font-bold">
+            Anonion
+          </span>
         </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <h3 className="text-2xl mt-6 text-gray-500 text-center">Get <span className="font-semibold text-gray-700">unbiased</span> opinions from your circle <span className="font-semibold text-gray-700">anonymously</span>. </h3>
+        <div className="mt-4">
+          <Link href={actionButtonHref}>
+            <button className="transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110">
+              Create New Anonion
+            </button>
+          </Link>
         </div>
       </main>
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://vercel.com"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -63,3 +49,5 @@ export default function Home() {
     </div>
   )
 }
+
+export default withAuthUser()(Home)

@@ -14,7 +14,7 @@ const firebaseAuthConfig = {
 	signInOptions: [
 		{
 			provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
-			requireDisplayName: false,
+			requireDisplayName: true,
 		},
 	],
 	signInSuccessUrl: '/',
@@ -22,16 +22,12 @@ const firebaseAuthConfig = {
 	callbacks: {
 		// https://github.com/firebase/firebaseui-web#signinsuccesswithauthresultauthresult-redirecturl
 		signInSuccessWithAuthResult: (authResult, redirectUrl) => {
-			console.log(authResult.user)
-			/* firestore.collection("users").add({
-				email: "prasannasrk07@gmail.com", 
-				name: "Prasanna"
-			}).then(value => console.log("value added")) */
+			console.log("signInSuccessWithAuthResult", authResult.user)
 			firestore
 				.collection('users')
 				.doc(authResult.user.uid)
 				.set({
-					name: authResult.user.email.split("@")[0],
+					name: authResult.user.displayName,
 					email: authResult.user.email
 				}, { merge: true })
 				.then(value => console.log("success"))

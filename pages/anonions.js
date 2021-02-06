@@ -39,18 +39,15 @@ function Anonions({ anonions }) {
 			gridGap: 20,
 			gridTemplateColumns: "repeat(auto-fill,minmax(270px,2fr))"
 		}}>
+			<button onClick={() => setModalOpen(true)} className="transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110">
+				Create New Anonion
+			</button>
 			{anonions.length > 0 ?
-				<>
-					<button onClick={() => setModalOpen(true)} className="transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110">
-						Create New Anonion
-					</button>
-					{
-						anonions.map((value, index) => {
-							return <Link  key={value.id} href={"/a/" + value.id}>
-							<a className=" cursor-pointer rounded-lg shadow-xl float-left p-4 bg-gray-100">{value.question}</a></Link>
-						})
-					}</>
-				: "No Anonions"}
+				anonions.map((value, index) => {
+					return <Link key={value.id} href={"/a/" + value.id}>
+						<a className=" cursor-pointer rounded-lg shadow-xl float-left p-4 bg-gray-100">{value.question}</a></Link>
+				})
+				: <></>}
 			<Modal
 				ariaHideApp={false}
 				isOpen={modalIsOpen}
@@ -79,7 +76,7 @@ function Anonions({ anonions }) {
 							}).then((value) => router.reload()).catch(e => window.alert("Error"))
 					}}>
 						Submit
-				</button>
+					</button>
 				</div>
 			</Modal>
 		</main>

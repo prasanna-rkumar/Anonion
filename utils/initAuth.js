@@ -4,7 +4,7 @@ import { env } from 'process'
 
 const initAuth = () => {
 	init({
-		authPageURL: '/auth',
+		authPageURL: '/login',
 		appPageURL: '/',
 		loginAPIEndpoint: '/api/login', // required
 		logoutAPIEndpoint: '/api/logout', // required
@@ -15,7 +15,7 @@ const initAuth = () => {
 				clientEmail: 'firebase-adminsdk-b6a3c@anonion-57d06.iam.gserviceaccount.com',
 				// The private key must not be accesssible on the client side.
 				privateKey: process.env.FIREBASE_PRIVATE_KEY
-				? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
+				? JSON.parse(process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'))
 				: undefined,
 			},
 		},

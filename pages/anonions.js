@@ -1,4 +1,5 @@
 import Header from '../components/Header'
+import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import firestore from '../utils/db-client'
 import db from '../utils/db-server'
@@ -7,6 +8,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Modal from "react-modal";
 import { withAuthUser, useAuthUser, AuthAction, withAuthUserTokenSSR } from 'next-firebase-auth'
+import { title } from 'process'
 
 function Anonions({ anonions }) {
 	const [modalIsOpen, setModalOpen] = useState(false);
@@ -28,13 +30,20 @@ function Anonions({ anonions }) {
 			openModal()
 	}, [])
 	var AuthUser = useAuthUser()
+	console.log(AuthUser)
 
 	return <div className={styles.container}>
+		<Head>
+			<title>My Questions</title>
+		</Head>
 		<Header email={AuthUser.email} signOut={AuthUser.signOut} />
+		<div>
+			<span className="text-2xl font-bold text-gray-700">{AuthUser.firebaseUser ? AuthUser.firebaseUser.displayName.concat("'s Anonions") : ""}</span>
+		</div>
 		<main style={{
 			width: "100%",
 			flex: 1,
-			padding: "5rem 0",
+			padding: "3rem 0 5rem 0",
 			display: "grid",
 			gridGap: 20,
 			gridTemplateColumns: "repeat(auto-fill,minmax(270px,2fr))"
@@ -93,7 +102,6 @@ export const getServerSideProps = withAuthUserTokenSSR({
 		.get()
 		.then(querySnapshot => querySnapshot)
 		.catch(e => e)
-	console.log(anonions)
 	var docs = []
 	if (!anonions.empty)
 		docs = anonions.docs.map(doc => {

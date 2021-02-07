@@ -8,7 +8,10 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Modal from "react-modal";
 import { withAuthUser, useAuthUser, AuthAction, withAuthUserTokenSSR } from 'next-firebase-auth'
-import { title } from 'process'
+import { ToastContainer, toast } from 'react-toastify';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 function Anonions({ anonions }) {
 	const [modalIsOpen, setModalOpen] = useState(false);
@@ -53,8 +56,37 @@ function Anonions({ anonions }) {
 			</button>
 			{anonions.length > 0 ?
 				anonions.map((value, index) => {
-					return <Link key={value.id} href={"/a/" + value.id}>
-						<a className=" cursor-pointer rounded-lg shadow-xl float-left p-4 bg-gray-100">{value.question}</a></Link>
+					return <div key={value.id} className="rounded-lg shadow-lg float-left px-4 py-2 bg-gray-100">
+						<Link href={"/a/" + value.id}>
+							<a className="border-b cursor-pointer block">{value.question}</a>
+						</Link>
+						<div className="p-0.5 m-0.5 w-5 inline">
+							<Link href={"/a/" + value.id}>
+								<a className="cursor-pointer">
+									<img className="w-4 inline" src="/comment.png" alt="replies" />
+									<span className="ml-1 text-xs text-gray-500">2</span>
+								</a>
+							</Link>
+							<button onClick={() => {
+								confirmAlert({
+									message: 'Are you sure to delete the question and all of its responses.',
+									buttons: [
+										{
+											label: 'Yes',
+											onClick: () => firestore.collection("anonions").doc(value.id).delete().then(() => {
+												toast("Question deleted!");
+												router.reload()
+											})
+										},
+										{
+											label: 'No',
+											onClick: () => alert('Click No')
+										}
+									]
+								});
+							}} className="float-right"><img className="w-4 inline" src="/trash.png" alt="Delete" /></button>
+						</div>
+					</div>
 				})
 				: <></>}
 			<Modal
@@ -89,6 +121,13 @@ function Anonions({ anonions }) {
 				</div>
 			</Modal>
 		</main>
+		<ToastContainer
+			autoClose={2000}
+			closeOnClick
+			pauseOnFocusLoss={false}
+			pauseOnHover={false}
+			onClose={() => router.reload()}
+		/>
 	</div>
 }
 

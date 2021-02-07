@@ -27,7 +27,7 @@ const Header = ({ email, signOut }) => {
 			{email ? (
 				<div>
 					<Link href="/anonions">
-						<button type="button" className="bg-black text-white border-gray-900 border-2 rounded-full py-2 px-4 hover:shadow-md" style={styles.button}>
+						<button type="button" className="bg-black text-white border-gray-900 border-2 rounded-full py-2 px-1 hover:shadow-md" style={styles.button}>
 							My Anonions
 			  			</button>
 					</Link>
@@ -37,7 +37,7 @@ const Header = ({ email, signOut }) => {
 							signOut().then((v) => router.replace("/"))
 						}}
 						style={styles.button}
-						className="border-gray-900 border-2 rounded-full py-2 px-4 hover:shadow-md"
+						className="border-gray-900 border-2 rounded-full py-2 px-1 hover:shadow-md"
 					>
 						Logout
 			</button>

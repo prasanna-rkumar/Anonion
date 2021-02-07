@@ -64,7 +64,7 @@ function Anonions({ anonions }) {
 							<Link href={"/a/" + value.id}>
 								<a className="cursor-pointer">
 									<img className="w-4 inline" src="/comment.png" alt="replies" />
-									<span className="ml-1 text-xs text-gray-500">2</span>
+									{/* <span className="ml-1 text-xs text-gray-500">2</span> */}
 								</a>
 							</Link>
 							<button onClick={() => {

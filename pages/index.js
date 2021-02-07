@@ -15,7 +15,7 @@ function Home() {
     <div className={styles.container}>
       <Header email={AuthUser.email} signOut={AuthUser.signOut} />
       <Head>
-        <title>Anonion - Anonionous Opinions</title>
+        <title>Anonion - Anonymous Opinions</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 

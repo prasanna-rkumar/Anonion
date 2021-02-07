@@ -26,7 +26,7 @@ function Home() {
             Anonion
           </span>
         </h1>
-        <h3 className="text-2xl mt-6 text-gray-500 text-center">Get <span className="font-semibold text-gray-700">unbiased</span> opinions from your circle <span className="font-semibold text-gray-700">anonionously</span>. </h3>
+        <h3 className="text-2xl mt-6 text-gray-500 text-center">Get <span className="font-semibold text-gray-700">unbiased</span> opinions from your circle <span className="font-semibold text-gray-700">anonymously</span>. </h3>
         <div className="mt-4">
           <Link href={actionButtonHref}>
             <button className="transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110">

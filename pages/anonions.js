@@ -16,9 +16,12 @@ import 'react-toastify/dist/ReactToastify.css';
 function Anonions({ anonions }) {
 	const [modalIsOpen, setModalOpen] = useState(false);
 	const [question, setQuestion] = useState("")
+
 	const router = useRouter()
+
 	var openModal = () => setModalOpen(true);
 	var closeModal = () => setModalOpen(false);
+
 	const customStyles = {
 		content: {
 			height: "40%",
@@ -28,10 +31,28 @@ function Anonions({ anonions }) {
 			maxWidth: 400
 		},
 	};
+
 	useEffect(() => {
 		if (window.location.search.indexOf("new") >= 0)
 			openModal()
 	}, [])
+
+	useEffect(() => {
+		let unsubscribe = firestore.collection("anonions")
+			.where("uid", "==", AuthUser.id)
+			.orderBy("createdAt", "desc")
+			.onSnapshot((snapshot) => {
+				if (snapshot.size > 0) {
+					console.log(snapshot.docs)
+				}
+			}, (e) => {
+				console.log(e)
+			})
+		return () => {
+			unsubscribe()
+		}
+	}, [])
+
 	var AuthUser = useAuthUser()
 	console.log(AuthUser)
 

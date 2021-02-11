@@ -37,22 +37,6 @@ function Anonions({ anonions }) {
 			openModal()
 	}, [])
 
-	useEffect(() => {
-		let unsubscribe = firestore.collection("anonions")
-			.where("uid", "==", AuthUser.id)
-			.orderBy("createdAt", "desc")
-			.onSnapshot((snapshot) => {
-				if (snapshot.size > 0) {
-					console.log(snapshot.docs)
-				}
-			}, (e) => {
-				console.log(e)
-			})
-		return () => {
-			unsubscribe()
-		}
-	}, [])
-
 	var AuthUser = useAuthUser()
 	console.log(AuthUser)
 

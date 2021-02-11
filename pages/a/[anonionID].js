@@ -30,12 +30,14 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 			.collection("responses")
 			.orderBy("createdAt", "desc")
 			.onSnapshot((snapshot) => {
+				if (loading) setLoading(false)
 				if (snapshot.size > 0) {
 					var list = snapshot.docs.map((doc) => Object.assign({ ...doc.data(), id: doc.id }))
 					setResponses([...list])
 				}
 			}, (e) => {
 				console.log(e)
+				setLoading(false)
 			})
 		return () => {
 			unsubscribe()

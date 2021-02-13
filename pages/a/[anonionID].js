@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import dynamic from 'next/dynamic'
 import { useState, useEffect } from 'react'
 import { withAuthUser, useAuthUser, AuthAction, withAuthUserTokenSSR } from 'next-firebase-auth'
 import db from '../../utils/db-server'
@@ -7,18 +8,20 @@ import firestore from '../../utils/db-client'
 import Header from '../../components/Header'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { ToastContainer, toast } from 'react-toastify';
-import { LoadingOverlay, Loader } from 'react-overlay-loader';
-import 'react-overlay-loader/styles.css';
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingOverlay from '../../components/LoadingOverlay'
+
+const DynamicComponentWithCustomLoading = dynamic(
+	() => import('../../components/AnswerForm'),
+	{ loading: () => <p>...</p> }
+)
 
 function AnonionPage({ isOwner, anonion, displayName, url }) {
 	const router = useRouter()
 	const AuthUser = useAuthUser()
-	const [answer, setAnswer] = useState("")
 	const { anonionID } = router.query
 	const [shareURL, setShareURL] = useState("")
 	const notify = () => toast("Link Copied!");
-	const answerSubmittedNotify = () => toast("Answer Sent!")
 	const [message, setMessage] = useState("")
 	const [responses, setResponses] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -58,7 +61,7 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 				<meta property="og:url" content={url} />
 				<meta name="twitter:card" content="summary_large_image" />
 			</Head>
-			<div className=" max-w-screen-xl m-auto">
+			<div className="max-w-screen-xl m-auto px-2">
 				<Header email={AuthUser.email} signOut={AuthUser.signOut} />
 				<main className="w-11/12 m-auto max-w-screen-md">
 					{isOwner ? <></> : <div className="text-gray-600 text-xl font-medium pb-2 pl-2">{displayName}'s Question</div>}
@@ -73,7 +76,8 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 							</CopyToClipboard>
 						</div>
 						{isOwner ?
-							<LoadingOverlay>
+							<div>
+								<LoadingOverlay isLoading={loading} />
 								{responses.length > 0 ? <div style={{
 									width: "100%",
 									flex: 1,
@@ -91,29 +95,8 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 									})}
 								</div>
 									: <div className="m-2 text-md text-gray-600 font-semibold">No Answers</div>}
-								<Loader loading={loading} />
-							</LoadingOverlay> : <>
-								<textarea placeholder="Send your anonymous message" className="my-4 mt-6" maxLength={128} value={answer} onChange={(e) => setAnswer(e.target.value)} rows={4} cols={40} style={{
-									borderRadius: 6,
-									width: "100%",
-									backgroundColor: "#d5feff",
-									paddingLeft: 6,
-									paddingTop: 2
-								}} ></textarea>
-								<button className="bg-black text-white border-gray-900 border-2 rounded-full py-1 px-4 hover:shadow-md m-2" onClick={() => {
-									const datetime = (new Date()).getTime()
-									firestore
-										.collection("anonions")
-										.doc(anonionID)
-										.collection("responses")
-										.add({
-											answer: answer.substr(0, 128),
-											createdAt: datetime,
-											updatedAt: datetime,
-										}).then((value) => answerSubmittedNotify()).catch(e => window.alert("Error"))
-								}}>
-									Submit
-						</button>
+							</div> : <>
+								{isOwner ? <></> : <DynamicComponentWithCustomLoading anonionID={anonionID} onSuccess={() => toast.success("Answer sent to " + displayName)} onError={() => toast.error("Something went wrong!")} />}
 							</>}
 					</div>
 				</main>
@@ -154,7 +137,6 @@ export const getServerSideProps = withAuthUserTokenSSR({
 				.then(querySnapshot => querySnapshot)
 				.catch(e => e)
 			props.displayName = user.get("name")
-			console.log(props.displayName)
 		}
 	}
 	return { props }

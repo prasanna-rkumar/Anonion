@@ -7,7 +7,6 @@ export const getServerSideProps = withAuthUserTokenSSR({
 	whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
 })(async ({ AuthUser }) => {
 	// Optionally, get other props.
-	// console.log(AuthUser)
 	db.collection("users").doc(AuthUser.id).get().then(value => console.log(value.get("name")))
 	return {
 		props: {

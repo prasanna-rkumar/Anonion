@@ -8,9 +8,8 @@ import firestore from '../../utils/db-client'
 import Header from '../../components/Header'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { ToastContainer, toast } from 'react-toastify';
-import { LoadingOverlay, Loader } from 'react-overlay-loader';
-import 'react-overlay-loader/styles.css';
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingOverlay from '../../components/LoadingOverlay'
 
 const DynamicComponentWithCustomLoading = dynamic(
 	() => import('../../components/AnswerForm'),
@@ -62,7 +61,7 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 				<meta property="og:url" content={url} />
 				<meta name="twitter:card" content="summary_large_image" />
 			</Head>
-			<div className=" max-w-screen-xl m-auto">
+			<div className="max-w-screen-xl m-auto px-2">
 				<Header email={AuthUser.email} signOut={AuthUser.signOut} />
 				<main className="w-11/12 m-auto max-w-screen-md">
 					{isOwner ? <></> : <div className="text-gray-600 text-xl font-medium pb-2 pl-2">{displayName}'s Question</div>}
@@ -77,7 +76,8 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 							</CopyToClipboard>
 						</div>
 						{isOwner ?
-							<LoadingOverlay>
+							<div>
+								<LoadingOverlay isLoading={loading} />
 								{responses.length > 0 ? <div style={{
 									width: "100%",
 									flex: 1,
@@ -95,8 +95,7 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 									})}
 								</div>
 									: <div className="m-2 text-md text-gray-600 font-semibold">No Answers</div>}
-								<Loader loading={loading} />
-							</LoadingOverlay> : <>
+							</div> : <>
 								{isOwner ? <></> : <DynamicComponentWithCustomLoading anonionID={anonionID} onSuccess={() => toast.success("Answer sent to " + displayName)} onError={() => toast.error("Something went wrong!")} />}
 							</>}
 					</div>
@@ -138,7 +137,6 @@ export const getServerSideProps = withAuthUserTokenSSR({
 				.then(querySnapshot => querySnapshot)
 				.catch(e => e)
 			props.displayName = user.get("name")
-			console.log(props.displayName)
 		}
 	}
 	return { props }

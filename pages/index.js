@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import Header from '../components/Header'
+import LoadingOverlay from '../components/LoadingOverlay'
 import {
   useAuthUser,
   withAuthUser
@@ -18,7 +19,7 @@ function Home() {
         <title>Anonion - Anonionous Opinions</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+      <LoadingOverlay isLoading={!AuthUser.clientInitialized} />
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome {isAuthed ? "back" : ""} to&nbsp;

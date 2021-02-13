@@ -21,7 +21,6 @@
     "react-firebaseui": "^4.1.0",
     "react-hook-form": "^6.15.1",
     "react-modal": "^3.12.1",
-    "react-overlay-loader": "0.0.3",
     "react-toastify": "^7.0.3",
     "tailwindcss": "^2.0.2"
   }

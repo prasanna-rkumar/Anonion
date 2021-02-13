@@ -38,8 +38,6 @@ function Anonions({ anonions }) {
 	}, [])
 
 	var AuthUser = useAuthUser()
-	console.log(AuthUser)
-
 	return <div className={styles.container}>
 		<Head>
 			<title>My Questions</title>
@@ -119,7 +117,10 @@ function Anonions({ anonions }) {
 								question: question,
 								createdAt: (new Date()).getTime(),
 								updatedAt: (new Date()).getTime(),
-							}).then((value) => router.reload()).catch(e => window.alert("Error"))
+							}).then((value) => {
+								toast.success("Question added successfully")
+								setTimeout(() => router.push("/a/" + value.id), 1500);
+							}).catch(e => window.alert("Error"))
 					}}>
 						Submit
 					</button>
@@ -127,11 +128,10 @@ function Anonions({ anonions }) {
 			</Modal>
 		</main>
 		<ToastContainer
-			autoClose={2000}
+			autoClose={1500}
 			closeOnClick
 			pauseOnFocusLoss={false}
 			pauseOnHover={false}
-			onClose={() => router.reload()}
 		/>
 	</div>
 }

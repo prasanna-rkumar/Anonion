@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
 import { withAuthUser, AuthAction } from 'next-firebase-auth'
 import { useForm } from 'react-hook-form'
+import Head from 'next/head'
 
 const GithubAuthProvider = new auth.GithubAuthProvider()
 const GoogleAuthProvider = new auth.GoogleAuthProvider()
@@ -39,6 +40,9 @@ const SocialLoginButton = ({ Icon, label, provider }) => {
 const LoginPage = () => {
 	const { register, handleSubmit } = useForm();
 	return <div className="flex flex-col flex-1 justify-center align-middle m-auto  bg-gray-100 h-screen px-2">
+		<Head>
+			<title>Anonion - Login</title>
+		</Head>
 		<div className="max-w-xl m-auto">
 			<div className="m-auto bg-white w-full rounded-md py-4 px-6 text-center shadow-2xl max-w-md">
 				<h3 className="text-6xl bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500 to-teal-500 font-bold mt-2">Anonion</h3>

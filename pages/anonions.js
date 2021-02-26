@@ -52,9 +52,9 @@ function Anonions({ anonions }) {
 			padding: "3rem 0 5rem 0",
 			display: "grid",
 			gridGap: 20,
-			gridTemplateColumns: "repeat(auto-fill,minmax(270px,2fr))"
+			gridTemplateColumns: "repeat(auto-fill,minmax(270px,2fr))",
 		}}>
-			<button onClick={() => setModalOpen(true)} className="transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110">
+			<button onClick={() => setModalOpen(true)} className="m-auto transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110" style={{maxWidth: "85%"}}>
 				Create New Anonion
 			</button>
 			{anonions.length > 0 ?

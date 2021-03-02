@@ -1,9 +1,9 @@
 import { auth } from '../utils/db-client'
 import { FcGoogle } from 'react-icons/fc'
 import { FaGithub } from 'react-icons/fa'
-import { withAuthUser, AuthAction } from 'next-firebase-auth'
 import { useForm } from 'react-hook-form'
-import Head from 'next/head'
+import { useContext } from 'react'
+import { LoadingContext } from '../context/GlobalLoadingContext'
 
 const GithubAuthProvider = new auth.GithubAuthProvider()
 const GoogleAuthProvider = new auth.GoogleAuthProvider()
@@ -12,19 +12,7 @@ const socialLogin = (provider) => {
 	auth().signInWithRedirect(provider).then(result => console.log(result))
 }
 
-const emailLogin = ({ email, password }) => {
-	auth().createUserWithEmailAndPassword(email, password)
-		.then((value) => console.log(value.user))
-		.catch(error => {
-			if (error.code == "auth/email-already-in-use") {
-				auth().signInWithEmailAndPassword(email, password).then(value => {
-					console.log(value)
-				}).then(e => console.log(e))
-			} else {
-				console.log(error)
-			}
-		})
-}
+
 
 const SocialLoginButton = ({ Icon, label, provider }) => {
 	return <button className="flex flex-row justify-center items-center border-gray-400 border-2 rounded-full p-1 my-3 w-full" onClick={() => socialLogin(provider)}>
@@ -37,7 +25,31 @@ const SocialLoginButton = ({ Icon, label, provider }) => {
 	</button>
 }
 export default function LoginCard() {
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit } = useForm()
+	const { setLoading } = useContext(LoadingContext)
+
+	const emailLogin = ({ email, password }) => {
+		setLoading(true)
+		auth().createUserWithEmailAndPassword(email, password)
+			.then((value) => {
+				console.log(value.user)
+				setLoading(false)
+			})
+			.catch(error => {
+				if (error.code == "auth/email-already-in-use") {
+					auth().signInWithEmailAndPassword(email, password).then(value => {
+						console.log(value)
+						setLoading(false)
+					}).then(e => {
+						console.log(e)
+						setLoading(false)
+					})
+				} else {
+					console.log(error)
+					setLoading(false)
+				}
+			})
+	}
 
 	return (
 		<div className="max-w-xl m-auto">
@@ -66,5 +78,5 @@ export default function LoginCard() {
 			</div>
 
 		</div>
-	);
+	)
 }

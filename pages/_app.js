@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react'
 
 import initAuth from '../utils/initAuth'
 import LoadingOverlay from '../components/LoadingOverlay';
+import { LoadingOverlayProvider } from '../context/GlobalLoadingContext'
 
 initAuth()
 
@@ -29,7 +30,9 @@ function MyApp({ Component, pageProps }) {
 
   return <>
     <LoadingOverlay isLoading={loading} />
-    <Component {...pageProps} />
+    <LoadingOverlayProvider>
+      <Component {...pageProps} />
+    </LoadingOverlayProvider>
   </>
 }
 

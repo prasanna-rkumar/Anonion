@@ -1,10 +1,33 @@
+import { useState } from 'react'
 import firestore from '../utils/db-client'
 import { useForm } from "react-hook-form";
+import Modal from "react-modal";
+import { CgCloseO } from 'react-icons/cg'
+import LoginCard from './LoginCard'
+import { useAuthUser } from 'next-firebase-auth'
+import axios from 'axios'
+
 
 const AnswerForm = ({ anonionID, onSuccess, onError }) => {
+	const user = useAuthUser()
+	const [modalIsOpen, setModalIsOpen] = useState(false)
+
 	const { register, errors, handleSubmit, reset } = useForm();
-	const onSubmit = data => {
-		const datetime = (new Date()).getTime()
+	const onSubmit = async (data) => {
+		if (user.email == null) {
+			setModalIsOpen(true)
+			return
+		} else {
+			let firebaseIdToken = await user.getIdToken()
+			axios.post("/api/answer", {
+				anonionID: anonionID, 
+				answer: data.answer, 
+				firebaseIdToken
+			}).then(resp => console.log("OK"))
+			return 
+		}
+
+		/* const datetime = (new Date()).getTime()
 		firestore
 			.collection("anonions")
 			.doc(anonionID)
@@ -19,10 +42,33 @@ const AnswerForm = ({ anonionID, onSuccess, onError }) => {
 			}).catch(e => {
 				console.log(e);
 				onError();
-			})
+			}) */
 	};
 
 	return <div>
+		<Modal
+			ariaHideApp={false}
+			isOpen={modalIsOpen}
+			style={{
+				content: {
+					textAlign: "center",
+					margin: "auto",
+					inset: "5%",
+					maxWidth: 400,
+					border: "none",
+					display: "flex"
+				},
+			}}
+		>
+			<div className="flex flex-col justify-center items-start" style={{ height: "fit-content" }}>
+				<button onClick={() => {
+					setModalIsOpen(false)
+				}}>
+					<CgCloseO size={20} />
+				</button>
+				<LoginCard />
+			</div>
+		</Modal>
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<textarea placeholder="Send your anonymous message" name="answer" className="my-2 mt-6" ref={register({
 				required: {

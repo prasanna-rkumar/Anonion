@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import dynamic from 'next/dynamic'
-import { useState, useEffect } from 'react'
-import { withAuthUser, useAuthUser, AuthAction, withAuthUserTokenSSR } from 'next-firebase-auth'
+import { useState, useEffect, useContext } from 'react'
+import { withAuthUser, useAuthUser, withAuthUserTokenSSR } from 'next-firebase-auth'
 import db from '../../utils/db-server'
 import firestore from '../../utils/db-client'
 import Header from '../../components/Header'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import LoadingOverlay from '../../components/LoadingOverlay'
+import { LoadingContext } from '../../context/GlobalLoadingContext'
 
 const DynamicComponentWithCustomLoading = dynamic(
 	() => import('../../components/AnswerForm'),
@@ -19,21 +19,22 @@ const DynamicComponentWithCustomLoading = dynamic(
 function AnonionPage({ isOwner, anonion, displayName, url }) {
 	const router = useRouter()
 	const AuthUser = useAuthUser()
+	const {setLoading} = useContext(LoadingContext)
 	const { anonionID } = router.query
 	const [shareURL, setShareURL] = useState("")
 	const notify = () => toast("Link Copied!");
 	const [message, setMessage] = useState("")
 	const [responses, setResponses] = useState([])
-	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
+		setLoading(true)
 		setShareURL(window.location.href);
 		let unsubscribe = firestore.collection("anonions")
 			.doc(anonionID)
 			.collection("responses")
 			.orderBy("createdAt", "desc")
 			.onSnapshot((snapshot) => {
-				if (loading) setLoading(false)
+				setLoading(false)
 				if (snapshot.size > 0) {
 					var list = snapshot.docs.map((doc) => Object.assign({ ...doc.data(), id: doc.id }))
 					setResponses([...list])
@@ -46,11 +47,12 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 			unsubscribe()
 		}
 	}, [])
+
 	useEffect(() => {
 		if (AuthUser.firebaseUser != null) {
 			setMessage(AuthUser.firebaseUser.displayName + " wants your anonymous opinion")
 		}
-	}, [AuthUser])
+	}, [AuthUser.firebaseUser])
 
 	return <div className="bg-gray-100 h-screen">
 		{anonion == undefined ? <div>404: Not found</div> : <>
@@ -77,7 +79,6 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 						</div>
 						{isOwner ?
 							<div>
-								<LoadingOverlay isLoading={loading} />
 								{responses.length > 0 ? <div style={{
 									width: "100%",
 									flex: 1,

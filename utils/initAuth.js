@@ -11,12 +11,12 @@ const initAuth = () => {
 		// Required in most cases.
 		firebaseAdminInitConfig: {
 			credential: {
-				projectId: "anonion-57d06",
-				clientEmail: 'firebase-adminsdk-b6a3c@anonion-57d06.iam.gserviceaccount.com',
+				projectId: process.env.PROJECT_ID,
+				clientEmail: process.env.CLIENT_EMAIL,
 				// The private key must not be accesssible on the client side.
 				privateKey: process.env.FIREBASE_PRIVATE_KEY
-				? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
-				: undefined,
+					? JSON.parse(process.env.FIREBASE_PRIVATE_KEY)
+					: undefined,
 			},
 		},
 		firebaseClientInitConfig: {

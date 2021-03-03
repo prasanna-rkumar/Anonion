@@ -2,23 +2,30 @@ import Head from 'next/head'
 import Link from 'next/link'
 import styles from '../styles/Home.module.css'
 import Header from '../components/Header'
+import {useEffect, useContext} from 'react'
+import { LoadingContext } from '../context/GlobalLoadingContext'
 import {
   useAuthUser,
   withAuthUser
 } from 'next-firebase-auth'
+
 function Home() {
   var AuthUser = useAuthUser()
+  const {setLoading} = useContext(LoadingContext)
   let isAuthed = (AuthUser && AuthUser.email)
   var actionButtonHref = isAuthed ? "/anonions?new_entry=true" : "/login"
+
+  useEffect(() => {
+    setLoading(!AuthUser.clientInitialized)
+  }, [AuthUser.clientInitialized])
 
   return (
     <div className={styles.container}>
       <Header email={AuthUser.email} signOut={AuthUser.signOut} />
       <Head>
-        <title>Anonion - Anonionous Opinions</title>
+        <title>Anonion - Anonymous Opinions</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className={styles.main}>
         <h1 className={styles.title}>
           Welcome {isAuthed ? "back" : ""} to&nbsp;

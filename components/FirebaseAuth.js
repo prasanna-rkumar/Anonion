@@ -22,7 +22,6 @@ const firebaseAuthConfig = {
 	callbacks: {
 		// https://github.com/firebase/firebaseui-web#signinsuccesswithauthresultauthresult-redirecturl
 		signInSuccessWithAuthResult: (authResult, redirectUrl) => {
-			console.log("signInSuccessWithAuthResult", authResult.user)
 			firestore
 				.collection('users')
 				.doc(authResult.user.uid)

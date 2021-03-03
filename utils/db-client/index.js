@@ -1,4 +1,6 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
 const firebaseConfig = {
 	apiKey: "AIzaSyBQG4VBeVVSb_FqjJF5PeRxZQEy7Zncj3g",
@@ -10,12 +12,14 @@ const firebaseConfig = {
 	measurementId: "G-LV0VD2FXLT"
 };
 
-try {
+if (!firebase.apps.length) {
 	firebase.initializeApp(firebaseConfig);
-} catch (err) {
-	if (!/already exists/.test(err.message)) {
-		console.error('Firebase initialization error', err.stack)
-	}
 }
-const fire = firebase;
-export default fire.firestore();
+
+const app = firebase.app();
+const auth = firebase.auth;
+const db = firebase.firestore();
+const now = firebase.firestore.Timestamp.now();
+export { auth, db, now };
+export default db;
+console.log(app.name ? 'Firebase Mode Activated!' : 'Firebase not working :(');

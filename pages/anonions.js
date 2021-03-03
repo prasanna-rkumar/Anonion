@@ -16,9 +16,12 @@ import 'react-toastify/dist/ReactToastify.css';
 function Anonions({ anonions }) {
 	const [modalIsOpen, setModalOpen] = useState(false);
 	const [question, setQuestion] = useState("")
+
 	const router = useRouter()
+
 	var openModal = () => setModalOpen(true);
 	var closeModal = () => setModalOpen(false);
+
 	const customStyles = {
 		content: {
 			height: "40%",
@@ -28,13 +31,13 @@ function Anonions({ anonions }) {
 			maxWidth: 400
 		},
 	};
+
 	useEffect(() => {
 		if (window.location.search.indexOf("new") >= 0)
 			openModal()
 	}, [])
-	var AuthUser = useAuthUser()
-	console.log(AuthUser)
 
+	var AuthUser = useAuthUser()
 	return <div className={styles.container}>
 		<Head>
 			<title>My Questions</title>
@@ -49,9 +52,9 @@ function Anonions({ anonions }) {
 			padding: "3rem 0 5rem 0",
 			display: "grid",
 			gridGap: 20,
-			gridTemplateColumns: "repeat(auto-fill,minmax(270px,2fr))"
+			gridTemplateColumns: "repeat(auto-fill,minmax(270px,2fr))",
 		}}>
-			<button onClick={() => setModalOpen(true)} className="transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110">
+			<button onClick={() => setModalOpen(true)} className="m-auto transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110" style={{maxWidth: "85%"}}>
 				Create New Anonion
 			</button>
 			{anonions.length > 0 ?
@@ -114,7 +117,10 @@ function Anonions({ anonions }) {
 								question: question,
 								createdAt: (new Date()).getTime(),
 								updatedAt: (new Date()).getTime(),
-							}).then((value) => router.reload()).catch(e => window.alert("Error"))
+							}).then((value) => {
+								toast.success("Question added successfully")
+								setTimeout(() => router.push("/a/" + value.id), 1500);
+							}).catch(e => window.alert("Error"))
 					}}>
 						Submit
 					</button>
@@ -122,11 +128,10 @@ function Anonions({ anonions }) {
 			</Modal>
 		</main>
 		<ToastContainer
-			autoClose={2000}
+			autoClose={1500}
 			closeOnClick
 			pauseOnFocusLoss={false}
 			pauseOnHover={false}
-			onClose={() => router.reload()}
 		/>
 	</div>
 }

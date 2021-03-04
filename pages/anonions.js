@@ -102,7 +102,6 @@ function Anonions() {
 											label: 'Yes',
 											onClick: () => firestore.collection("anonions").doc(value.id).delete().then(() => {
 												toast("Question deleted!");
-												router.reload()
 											})
 										},
 										{

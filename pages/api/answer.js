@@ -1,4 +1,4 @@
-import firestore from '../../utils/db-server'
+import admin from '../../utils/db-server'
 import { verifyIdToken } from 'next-firebase-auth'
 import initAuth from '../../utils/initAuth'
 
@@ -14,15 +14,18 @@ const answer = (req, res) => {
 	let { anonionID, answer } = req.body
 	return verifyIdToken(req.body.firebaseIdToken)
 		.then(AuthUser => {
-			firestore.collection("anonions").doc(anonionID).collection("responses").where("uid", "==", AuthUser.id).get().then(snapshot => {
+			admin.firestore().collection("anonions").doc(anonionID).collection("responses").where("uid", "==", AuthUser.id).get().then(snapshot => {
 				if (snapshot.docs.length == 0) {
 					let createdAt = Date.now()
-					firestore.collection("anonions").doc(anonionID).collection("responses").add({
+					admin.firestore().collection("anonions").doc(anonionID).collection("responses").add({
 						uid: AuthUser.id,
 						answer,
 						createdAt,
 						updatedAt: createdAt
 					}).then(() => {
+						admin.firestore().collection("anonions").doc(anonionID).update({
+							responsesCount: firestore.FieldValue.increment(1)
+						})
 						return res.status(200).json({ msg: 'Success' })
 					})
 				} else {

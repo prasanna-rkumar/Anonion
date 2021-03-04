@@ -3,7 +3,7 @@ import Head from 'next/head'
 import dynamic from 'next/dynamic'
 import { useState, useEffect, useContext } from 'react'
 import { withAuthUser, useAuthUser, withAuthUserTokenSSR } from 'next-firebase-auth'
-import db from '../../utils/db-server'
+import admin from '../../utils/db-server'
 import firestore from '../../utils/db-client'
 import Header from '../../components/Header'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
@@ -116,7 +116,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
 })(async (ctx) => {
 	var { query, AuthUser, req, resolvedUrl } = ctx
 	var { headers } = req
-	var anonion = await db
+	var anonion = await admin.firestore()
 		.collection("anonions")
 		.doc(query.anonionID)
 		.get()
@@ -131,7 +131,7 @@ export const getServerSideProps = withAuthUserTokenSSR({
 		if (AuthUser && anonion.get("uid") == AuthUser.id) {
 			props.isOwner = true
 		} else {
-			var user = await db
+			var user = await admin.firestore()
 				.collection('users')
 				.doc(anonion.get('uid'))
 				.get()

@@ -12,6 +12,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import 'react-toastify/dist/ReactToastify.css';
+import { relativeTimeString } from '../utils/dayjs-helper'
 
 function Anonions({ anonions }) {
 	const [modalIsOpen, setModalOpen] = useState(false);
@@ -43,30 +44,32 @@ function Anonions({ anonions }) {
 			<title>My Questions</title>
 		</Head>
 		<Header email={AuthUser.email} signOut={AuthUser.signOut} />
-		<div>
-			<span className="text-2xl font-bold text-gray-700">{AuthUser.firebaseUser ? AuthUser.firebaseUser.displayName.concat("'s Anonions") : ""}</span>
+		<div className="flex flex-col align-middle">
+			<div className="text-2xl font-bold text-gray-700 mb-1">{AuthUser.firebaseUser ? AuthUser.firebaseUser.displayName.concat("'s Anonions") : ""}</div>
+			<button onClick={() => setModalOpen(true)} className="m-auto transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110" style={{ maxWidth: "85%" }}>
+				Create New Anonion
+			</button>
 		</div>
 		<main style={{
 			width: "100%",
 			flex: 1,
-			padding: "3rem 0 5rem 0",
+			padding: "2rem 0 5rem 0",
 			display: "grid",
 			gridGap: 20,
-			gridTemplateColumns: "repeat(auto-fill,minmax(270px,2fr))",
+			gridTemplateColumns: "repeat(auto-fill,minmax(360px,2fr))",
 		}}>
-			<button onClick={() => setModalOpen(true)} className="m-auto transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110" style={{maxWidth: "85%"}}>
-				Create New Anonion
-			</button>
+
 			{anonions.length > 0 ?
 				anonions.map((value, index) => {
-					return <div key={value.id} className="rounded-lg shadow-lg float-left px-4 py-2 bg-gray-100">
+					console.log(value)
+					return <div key={value.id} className="rounded-lg shadow-lg float-left px-4 py-2 bg-gray-100 flex flex-col justify-center">
 						<Link href={"/a/" + value.id}>
-							<a className="border-b cursor-pointer block">{value.question}</a>
+							<a className="border-b cursor-pointer block text-lg font-semibold">{value.question}</a>
 						</Link>
-						<div className="p-0.5 m-0.5 w-5 inline">
+						<div className="p-0.5 m-0.5">
 							<Link href={"/a/" + value.id}>
 								<a className="cursor-pointer">
-									<img className="w-4 inline" src="/comment.png" alt="replies" />
+									<span className="w-4 inline text-xs font-normal text-gray-400"> {relativeTimeString(value.createdAt)} </span>
 									{/* <span className="ml-1 text-xs text-gray-500">2</span> */}
 								</a>
 							</Link>

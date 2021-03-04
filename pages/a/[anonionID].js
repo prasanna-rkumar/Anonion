@@ -19,7 +19,7 @@ const DynamicComponentWithCustomLoading = dynamic(
 function AnonionPage({ isOwner, anonion, displayName, url }) {
 	const router = useRouter()
 	const AuthUser = useAuthUser()
-	const {setLoading} = useContext(LoadingContext)
+	const { setLoading } = useContext(LoadingContext)
 	const { anonionID } = router.query
 	const [shareURL, setShareURL] = useState("")
 	const notify = () => toast("Link Copied!");

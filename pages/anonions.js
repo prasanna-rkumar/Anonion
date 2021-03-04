@@ -2,23 +2,25 @@ import Header from '../components/Header'
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
 import firestore from '../utils/db-client'
-import db from '../utils/db-server'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Modal from "react-modal";
-import { withAuthUser, useAuthUser, AuthAction, withAuthUserTokenSSR } from 'next-firebase-auth'
+import { useAuthUser, withAuthUser, withAuthUserSSR, AuthAction } from 'next-firebase-auth'
 import { ToastContainer, toast } from 'react-toastify';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { relativeTimeString } from '../utils/dayjs-helper'
 import { AiOutlineDelete } from 'react-icons/ai'
+import { LoadingContext } from '../context/GlobalLoadingContext'
 
-function Anonions({ anonions }) {
+function Anonions() {
 	const [modalIsOpen, setModalOpen] = useState(false);
 	const [question, setQuestion] = useState("")
-
+	const [anonions, setAnonions] = useState([])
+	const { setLoading } = useContext(LoadingContext)
+	const AuthUser = useAuthUser()
 	const router = useRouter()
 
 	var openModal = () => setModalOpen(true);
@@ -35,11 +37,31 @@ function Anonions({ anonions }) {
 	};
 
 	useEffect(() => {
+		if (AuthUser.email == null) return
+		setLoading(true)
+		let unsubscribe = firestore.collection("anonions")
+			.where("uid", "==", AuthUser.id)
+			.orderBy("createdAt", "desc")
+			.onSnapshot((snapshot) => {
+				setLoading(false)
+				if (snapshot.size > 0) {
+					var list = snapshot.docs.map((doc) => Object.assign({ ...doc.data(), id: doc.id }))
+					setAnonions([...list])
+				}
+			}, (e) => {
+				console.log(e)
+				setLoading(false)
+			})
+		return () => {
+			unsubscribe()
+		}
+	}, [AuthUser])
+
+	useEffect(() => {
 		if (window.location.search.indexOf("new") >= 0)
 			openModal()
 	}, [])
 
-	var AuthUser = useAuthUser()
 	return <div className={styles.container}>
 		<Head>
 			<title>My Questions</title>
@@ -62,7 +84,6 @@ function Anonions({ anonions }) {
 
 			{anonions.length > 0 ?
 				anonions.map((value, index) => {
-					console.log(value)
 					return <div key={value.id} className="rounded-lg shadow-lg float-left px-4 py-2 bg-gray-100 flex flex-col justify-center">
 						<Link href={"/a/" + value.id}>
 							<a className="border-b cursor-pointer block text-lg font-semibold">{value.question}</a>
@@ -139,27 +160,12 @@ function Anonions({ anonions }) {
 	</div>
 }
 
-export const getServerSideProps = withAuthUserTokenSSR({
+export const getServerSideProps = withAuthUserSSR({
 	whenUnauthed: AuthAction.REDIRECT_TO_LOGIN,
-})(async ({ AuthUser }) => {
-	var anonions = await db
-		.collection("anonions")
-		.where("uid", "==", AuthUser.id)
-		.orderBy("createdAt", "desc")
-		.get()
-		.then(querySnapshot => querySnapshot)
-		.catch(e => e)
-	var docs = []
-	if (!anonions.empty)
-		docs = anonions.docs.map(doc => {
-			return {
-				...doc.data(),
-				id: doc.id
-			}
-		})
+})(() => {
 	return {
 		props: {
-			anonions: docs
+
 		}
 	}
 })

@@ -13,6 +13,7 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { relativeTimeString } from '../utils/dayjs-helper'
+import { AiOutlineDelete } from 'react-icons/ai'
 
 function Anonions({ anonions }) {
 	const [modalIsOpen, setModalOpen] = useState(false);
@@ -70,7 +71,6 @@ function Anonions({ anonions }) {
 							<Link href={"/a/" + value.id}>
 								<a className="cursor-pointer">
 									<span className="w-4 inline text-xs font-normal text-gray-400"> {relativeTimeString(value.createdAt)} </span>
-									{/* <span className="ml-1 text-xs text-gray-500">2</span> */}
 								</a>
 							</Link>
 							<button onClick={() => {
@@ -90,7 +90,7 @@ function Anonions({ anonions }) {
 										}
 									]
 								});
-							}} className="float-right"><img className="w-4 inline" src="/trash.png" alt="Delete" /></button>
+							}} className="float-right"><AiOutlineDelete color="gray" size={20} /></button>
 						</div>
 					</div>
 				})

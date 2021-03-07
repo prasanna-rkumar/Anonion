@@ -26,23 +26,6 @@ const AnswerForm = ({ anonionID, onSuccess, onError }) => {
 			}).then(resp => console.log("OK"))
 			return 
 		}
-
-		/* const datetime = (new Date()).getTime()
-		firestore
-			.collection("anonions")
-			.doc(anonionID)
-			.collection("responses")
-			.add({
-				answer: data.answer,
-				createdAt: datetime,
-				updatedAt: datetime,
-			}).then((value) => {
-				onSuccess()
-				reset()
-			}).catch(e => {
-				console.log(e);
-				onError();
-			}) */
 	};
 
 	return <div>

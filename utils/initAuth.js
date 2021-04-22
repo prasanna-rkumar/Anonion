@@ -1,6 +1,5 @@
 // ./initAuth.js
 import { init } from 'next-firebase-auth'
-import { env } from 'process'
 
 const initAuth = () => {
 	init({

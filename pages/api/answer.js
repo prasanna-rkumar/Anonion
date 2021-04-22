@@ -17,7 +17,7 @@ const answer = (req, res) => {
 			admin.firestore().collection("anonions").doc(anonionID).collection("responses").where("uid", "==", AuthUser.id).get().then(snapshot => {
 				if (snapshot.docs.length == 0) {
 					let createdAt = Date.now()
-					admin.firestore().collection("anonions").doc(anonionID).collection("responses").add({
+					admin.firestore().collection("anonions").doc(anonionID).collection("responses").doc(AuthUser.id).set({
 						uid: AuthUser.id,
 						answer,
 						createdAt,

@@ -133,11 +133,16 @@ function Anonions() {
 						paddingTop: 2
 					}} ></textarea>
 					<button className="bg-black text-white border-gray-900 border-2 rounded-full py-1 px-4 hover:shadow-md m-2" onClick={() => {
+						let questionCopy = question.trim();
+						if	(questionCopy === '') {
+							toast.error('Question cannot be empty!')
+							return;
+						}
 						firestore
 							.collection("anonions")
 							.add({
 								uid: AuthUser.id,
-								question: question,
+								question: questionCopy,
 								createdAt: (new Date()).getTime(),
 								updatedAt: (new Date()).getTime(),
 							}).then((value) => {

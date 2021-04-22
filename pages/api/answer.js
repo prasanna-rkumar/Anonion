@@ -12,6 +12,7 @@ const answer = (req, res) => {
 		return res.status(500).json({ error: 'Something went wrong! Please try again.' })
 	}
 	let { anonionID, answer } = req.body
+	if (!answer || answer.trim() == '') return res.status(400).json({ error: 'Please login to continue' })
 	return verifyIdToken(req.body.firebaseIdToken)
 		.then(AuthUser => {
 			admin.firestore().collection("anonions").doc(anonionID).collection("responses").where("uid", "==", AuthUser.id).get().then(snapshot => {
@@ -19,7 +20,7 @@ const answer = (req, res) => {
 					let createdAt = Date.now()
 					admin.firestore().collection("anonions").doc(anonionID).collection("responses").doc(AuthUser.id).set({
 						uid: AuthUser.id,
-						answer,
+						answer: answer.trim(),
 						createdAt,
 						updatedAt: createdAt
 					}).then(() => {

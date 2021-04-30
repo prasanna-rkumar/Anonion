@@ -7,17 +7,17 @@ People often feel hesitant to say something. We are insecure to share our deep s
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) and uses [Tailwind CSS](https://tailwindcss.com/docs/guides/nextjs).
 
 ### To run this app in local environment, 
-- Clone the app.
+1. Clone the app.
 ```bash
 git clone https://github.com/prasanna-rkumar/Anonion
 ```
- - Install the dependencies
+2. Install the dependencies
 ```bash
 npm i
 ```
- - Create a firebase app and enable Authentication and Firestore
- - Add the configuration values in the .env file. 
- - Run the development server:
+3. Create a firebase app and enable Authentication and Firestore
+4. Copy the `.env.example` file to a `.env.local` file and fill in the environment variables of your Firebase app.
+5. Run the development server:
 ```bash
 npm run dev
 ```

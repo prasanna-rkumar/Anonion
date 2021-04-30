@@ -47,6 +47,8 @@ function Anonions() {
 				if (snapshot.size > 0) {
 					var list = snapshot.docs.map((doc) => Object.assign({ ...doc.data(), id: doc.id }))
 					setAnonions([...list])
+				} else {
+					setAnonions([])
 				}
 			}, (e) => {
 				console.log(e)
@@ -135,7 +137,7 @@ function Anonions() {
 					}} ></textarea>
 					<button className="bg-black text-white border-gray-900 border-2 rounded-full py-1 px-4 hover:shadow-md m-2" onClick={() => {
 						let questionCopy = question.trim();
-						if	(questionCopy === '') {
+						if (questionCopy === '') {
 							toast.error('Question cannot be empty!')
 							return;
 						}

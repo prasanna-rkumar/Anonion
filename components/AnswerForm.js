@@ -6,13 +6,14 @@ import { CgCloseO } from 'react-icons/cg'
 import LoginCard from './LoginCard'
 import { useAuthUser } from 'next-firebase-auth'
 import axios from 'axios'
+import { toast } from 'react-toastify';
 
 
 const AnswerForm = ({ anonionID, onSuccess, onError }) => {
 	const user = useAuthUser()
 	const [modalIsOpen, setModalIsOpen] = useState(false)
 
-	const { register, errors, handleSubmit, reset } = useForm();
+	const { register, errors, handleSubmit } = useForm();
 	const onSubmit = async (data) => {
 		if (user.email == null) {
 			setModalIsOpen(true)
@@ -23,7 +24,13 @@ const AnswerForm = ({ anonionID, onSuccess, onError }) => {
 				anonionID: anonionID, 
 				answer: data.answer, 
 				firebaseIdToken
-			}).then(resp => console.log("OK"))
+			}).then(resp => {
+				if (resp.data?.error) {
+					toast.warning(resp.data.error)
+				} else {
+					toast.success(resp.data.msg)
+				}
+			})
 			return 
 		}
 	};

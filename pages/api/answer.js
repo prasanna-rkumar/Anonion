@@ -24,13 +24,10 @@ const answer = (req, res) => {
 						createdAt,
 						updatedAt: createdAt
 					}).then(() => {
-						admin.firestore().collection("anonions").doc(anonionID).update({
-							responsesCount: firestore.FieldValue.increment(1)
-						})
 						return res.status(200).json({ msg: 'Success' })
 					})
 				} else {
-					return res.status(400).json({ error: 'You cannot send more than one response' })
+					return res.status(200).json({ error: 'You cannot send more than one response' })
 				}
 			}).catch(e => {
 				console.log(e)

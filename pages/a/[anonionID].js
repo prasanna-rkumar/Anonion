@@ -16,7 +16,7 @@ const DynamicComponentWithCustomLoading = dynamic(
 	{ loading: () => <p>...</p> }
 )
 
-function AnonionPage({ isOwner, anonion, displayName, url }) {
+function AnonionPage({ isOwner, anonion, url }) {
 	const router = useRouter()
 	const AuthUser = useAuthUser()
 	const { setLoading } = useContext(LoadingContext)
@@ -59,14 +59,12 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 			<Head>
 				<title>Anonion - {anonion.question}</title>
 				<meta property="og:title" content={anonion.question} />
-				<meta property="og:description" content={isOwner ? anonion.question : displayName + " asks " + anonion.question} />
 				<meta property="og:url" content={url} />
 				<meta name="twitter:card" content="summary_large_image" />
 			</Head>
 			<div className="max-w-screen-xl m-auto px-2">
 				<Header email={AuthUser.email} signOut={AuthUser.signOut} />
 				<main className="w-11/12 m-auto max-w-screen-xl">
-					{isOwner ? <></> : <div className="text-gray-600 text-xl font-medium pb-2 pl-2">{displayName}'s Question</div>}
 					<div style={{ boxShadow: "0 2px 13px -2px rgb(0 0 0 / 10%)" }} className="bg-white w-full rounded-lg p-4 text-center max-w-screen-md m-auto mb-4">
 						<span className="text-4xl font-bold">{anonion.question}</span>
 						<div className="flex flex-row justify-center m-3">
@@ -87,7 +85,7 @@ function AnonionPage({ isOwner, anonion, displayName, url }) {
 						})}
 					</div>
 						: <div className="m-2 text-md text-gray-600 font-semibold">No Answers</div> : <>
-						{isOwner ? <></> : <DynamicComponentWithCustomLoading anonionID={anonionID} onSuccess={() => toast.success("Answer sent to " + displayName)} onError={() => toast.error("Something went wrong!")} />}
+						{isOwner ? <></> : <DynamicComponentWithCustomLoading anonionID={anonionID} onSuccess={() => toast.success("Answer sent")} onError={() => toast.error("Something went wrong!")} />}
 					</>}
 				</main>
 				<ToastContainer
@@ -119,14 +117,6 @@ export const getServerSideProps = withAuthUserTokenSSR({
 		props.anonion = anonion.data()
 		if (AuthUser && anonion.get("uid") == AuthUser.id) {
 			props.isOwner = true
-		} else {
-			var user = await admin.firestore()
-				.collection('users')
-				.doc(anonion.get('uid'))
-				.get()
-				.then(querySnapshot => querySnapshot)
-				.catch(e => e)
-			props.displayName = user.get("name")
 		}
 	}
 	return { props }

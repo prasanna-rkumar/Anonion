@@ -68,7 +68,6 @@ function Anonions() {
 		</Head>
 		<Header email={AuthUser.email} signOut={AuthUser.signOut} />
 		<div className="flex flex-col align-middle">
-			<div className="text-2xl font-bold text-gray-700 mb-1">{AuthUser.firebaseUser ? AuthUser.firebaseUser.displayName.concat("'s Anonions") : ""}</div>
 			<button onClick={() => setModalOpen(true)} className="m-auto transition duration-200 bounce-in bg-gradient-to-r from-green-400 to-blue-500 hover:animate-bounce text-white p-3 rounded-lg font-medium cursor-pointer transform hover:-translate-y-1 hover:scale-110" style={{ maxWidth: "85%" }}>
 				Create New Anonion
 			</button>
@@ -84,7 +83,9 @@ function Anonions() {
 
 			{anonions.length > 0 ?
 				anonions.map((value, index) => {
-					return <div key={value.id} className="rounded-lg shadow-lg float-left px-4 py-2 bg-gray-100 flex flex-col justify-center">
+					return <div style={{
+						height: "max-content"
+					}} key={value.id} className="rounded-lg shadow-lg float-left px-4 py-2 bg-gray-100 flex flex-col justify-center">
 						<Link href={"/a/" + value.id}>
 							<a className="border-b cursor-pointer block text-lg font-semibold">{value.question}</a>
 						</Link>
